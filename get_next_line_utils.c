@@ -6,7 +6,7 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:22 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/05/27 15:37:53 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/05/27 16:33:22 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ size_t	ft_strchr_i(const char *s, int c)
 			return (i);
 		i++;
 	}
-	return (NULL);
+	return (0);
 }
 
 char	*ft_strncpy(char *dest, char *src, unsigned int n)

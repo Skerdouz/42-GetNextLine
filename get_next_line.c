@@ -6,7 +6,7 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:25 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/05/27 15:46:57 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/05/27 17:05:26 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static char	*line_cutter(char *stash)
 	size_t	end_i;
 	char	*line;
 
-	end_i = ft_strchr_i(stash, '\0');
+	end_i = ft_strchr_i(stash, '\n');
 	line = malloc((end_i + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
@@ -69,7 +69,7 @@ char	*get_next_line(int fd)
 {
 	static char	*stash;
 	char	buffer[BUFFER_SIZE + 1];
-	char	line;
+	char	*line;
 	int		bytesread;
 
 	if (!fd)
@@ -81,10 +81,10 @@ char	*get_next_line(int fd)
 		stash = stash_realloc(stash, buffer);
 		if (!stash)
 			return (NULL);
-		if (ft_strchr_i(stash, '\0'))
+		if (ft_strchr_i(stash, '\n'))
 		{
 			line = line_cutter(stash);
-			return (stash_cleanup(stash, ft_strchr_i(stash, '\0')), line);
+			return (stash_cleanup(stash, ft_strchr_i(stash, '\n')), line);
 		}
 		bytesread = read(fd, buffer, BUFFER_SIZE);
 	}
