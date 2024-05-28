@@ -6,7 +6,7 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:22 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/05/28 13:45:17 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:59:14 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,32 @@ int	search_newline(char *str)
 		i++;
 	}
 	return (0);
+}
+
+char	*ft_strjoin(char *old, char *buffer)
+{
+	int	i;
+	int	j;
+	char	*new;
+
+	new = NULL;
+	if (!old)
+	{
+		old = malloc(sizeof(char) * 1);
+		if (!old)
+			return (NULL);
+		old[0] = '\0';
+	}
+	new = malloc(sizeof(char) * (ft_strlen(old) + ft_strlen(buffer) + 1));
+	if (!new)
+		return (NULL);
+	i = -1;
+	j = 0;
+	while (old[++i])
+		new[i] = old[i];
+	while (buffer[j])
+		new[i++] = buffer[j++];
+	new[i] = '\0';
+	
+	return (free(old), new);
 }

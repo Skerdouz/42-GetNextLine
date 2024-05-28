@@ -6,7 +6,7 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:18 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/05/28 13:45:26 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/05/28 15:54:45 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
 int		search_newline(char *str);
+char	*ft_strjoin(char *old, char *buffer);
 
 #endif
