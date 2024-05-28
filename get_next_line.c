@@ -6,7 +6,7 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:25 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/05/28 14:07:56 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/05/28 14:57:35 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,16 @@ static char	*stash_realloc(char *old, char *buffer)
 	new = malloc(sizeof(char) * (ft_strlen(old) + ft_strlen(buffer) + 1));
 	if (!new)
 		return (NULL);
-	while (*old)
+	if (old)
 	{
-		new[i++] = *old;
-		old++;
+		while (*old)
+		{
+			new[i++] = *old;
+			old++;
+		}
+		free(old);
 	}
-	free(old);
+	
 	while (*buffer)
 	{
 		new[i++] = *buffer;
@@ -37,24 +41,19 @@ static char	*stash_realloc(char *old, char *buffer)
 	return (new);
 }
 
-static void	fd_reader(int fd, char *stash, int *bytesread)
+static void	fd_reader(int fd, char *stash)
 {
-	char	*buffer;
+	char	buffer[BUFFER_SIZE + 1];
+	int		bytesread;
 
-	while (!search_newline(stash) && *bytesread > 0)
+	bytesread = 1;
+	while (!search_newline(stash) && bytesread > 0)
 	{
-		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-		if (!buffer)
+		bytesread = read(fd, buffer, BUFFER_SIZE);
+		if (bytesread <= 0)
 			return ;
-		*bytesread = read(fd, buffer, BUFFER_SIZE);
-		if (*bytesread <= 0)
-		{
-			free(buffer);
-			return ;
-		}
 		buffer[BUFFER_SIZE] = '\0';
-		stash_realloc(stash, buffer);
-		free(buffer);
+		stash = stash_realloc(stash, buffer);
 	}
 }
 
@@ -100,21 +99,29 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*stash;
-	int			bytesread;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
 		return (NULL);
-	bytesread = 1;
 	line = NULL;
+	fd_reader(fd, stash);
 	if (!stash)
-		stash = "";
-	fd_reader(fd, stash, &bytesread);
+		return (NULL);
 	line = get_line(stash);
-	if (!line[0])
+	if (!line)
 	{
 		free(stash);
+		free(line);
 		return (NULL);
 	}
 	stash = stash_cleanup(stash);
 	return (line);
 }
+// #include <fcntl.h>
+// #include <stdio.h>
+
+// int	main()
+// {	
+// 	int fd = open("1char.txt", O_RDONLY);
+// 	printf("%s", get_next_line(fd));
+// 	return (0);
+// }
