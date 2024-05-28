@@ -6,88 +6,115 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:25 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/05/27 17:05:26 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/05/28 14:02:52 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*stash_realloc(char *old, char *buf)
+static char	*stash_realloc(char *old, char *buffer)
 {
-	char	*new_buffer;
-	size_t	old_len;
-	size_t	buf_len;
 	size_t	i;
+	char	*new;
 
 	i = 0;
-	old_len = ft_strlen(old);
-	buf_len = ft_strlen(buf);
-	new_buffer = malloc((old_len + buf_len) + 1);
-	if (!new_buffer)
+	new = NULL;
+	new = malloc(sizeof(char) * (ft_strlen(old) + ft_strlen(buffer) + 1));
+	if (!new)
 		return (NULL);
 	while (*old)
 	{
-		new_buffer[i++] = *old;
+		new[i++] = *old;
 		old++;
 	}
 	free(old);
-	while (*buf)
+	while (*buffer)
 	{
-		new_buffer[i++] = *buf;
-		buf++;
+		new[i++] = *buffer;
+		buffer++;
 	}
-	new_buffer[i] = '\0';
-	return (new_buffer);
+	new[i] = '\0';
+	return (new);
 }
 
-static int	stash_cleanup(char *old, size_t end_i)
+static void	fd_reader(int fd, char *stash, int *bytesread)
 {
-	char	*new;
+	char	*buffer;
 
-	new = ft_strdup(&old[end_i]);
-	free (old);
-	if (!new)
-		return (1);
-	return (0);
+	while (!search_newline(stash) && *bytesread > 0)
+	{
+		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		if (!buffer)
+			return ;
+		*bytesread = read(fd, buffer, BUFFER_SIZE);
+		if (*bytesread <= 0)
+		{
+			free(buffer);
+			return ;
+		}
+		buffer[BUFFER_SIZE] = '\0';
+		stash_realloc(stash, buffer);
+		free(buffer);
+	}
 }
 
-static char	*line_cutter(char *stash)
+static char	*get_line(char *stash)
 {
-	size_t	end_i;
 	char	*line;
+	int		end_i;
+	int		i;
 
-	end_i = ft_strchr_i(stash, '\n');
-	line = malloc((end_i + 1) * sizeof(char));
+	i = 0;
+	end_i = search_newline(stash);
+	line = malloc(sizeof(char) * (end_i));
 	if (!line)
 		return (NULL);
-	line = ft_strncpy(line, stash, end_i);
-	stash_cleanup(stash, end_i);
+	while (i != end_i)
+	{
+		line[i] = stash[i];
+		i++;
+	}
+	line[i] = '\0';
 	return (line);
+}
+
+static char	*stash_cleanup(char *stash)
+{
+	int		i;
+	int		end_i;
+	char	*new;
+
+	i = 0;
+	end_i = search_newline(stash) + 1;
+	new = malloc(sizeof(char) * (ft_strlen(&stash[end_i]) + 1));
+	if (!new)
+		return (NULL);
+	while (new[i])
+		new[i++] = stash[end_i++];
+	new[i] = '\0';
+	free(stash);
+	return (new);
 }
 
 char	*get_next_line(int fd)
 {
+	char		*line;
 	static char	*stash;
-	char	buffer[BUFFER_SIZE + 1];
-	char	*line;
-	int		bytesread;
+	int			bytesread;
 
-	if (!fd)
+	if (fd < 0 || BUFFER_SIZE == 0 || read(fd, &line, 0) < 0)
 		return (NULL);
-	bytesread = read(fd, buffer, BUFFER_SIZE);
-	while (bytesread > 0)
+	bytesread = 1;
+	line = NULL;
+	if (!stash)
+		stash = "";
+	fd_reader(fd, stash, &bytesread);
+	line = get_line(stash);
+	if (!line[0])
 	{
-		buffer[bytesread] = '\0';
-		stash = stash_realloc(stash, buffer);
-		if (!stash)
-			return (NULL);
-		if (ft_strchr_i(stash, '\n'))
-		{
-			line = line_cutter(stash);
-			return (stash_cleanup(stash, ft_strchr_i(stash, '\n')), line);
-		}
-		bytesread = read(fd, buffer, BUFFER_SIZE);
+		free(stash);
+		return (NULL);
 	}
-	free(stash);
-	return (NULL);
+	stash = stash_cleanup(stash);
+	return (line);
 }
