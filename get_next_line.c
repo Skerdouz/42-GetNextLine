@@ -6,7 +6,7 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:25 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/05/28 14:02:52 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/05/28 14:07:56 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	int			bytesread;
 
-	if (fd < 0 || BUFFER_SIZE == 0 || read(fd, &line, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) <= 0)
 		return (NULL);
 	bytesread = 1;
 	line = NULL;
