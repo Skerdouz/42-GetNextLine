@@ -6,7 +6,7 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:25 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/05/31 00:31:04 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/05/31 14:08:23 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,14 +97,42 @@ char	*get_next_line(int fd)
 	stash = get_restover(stash);
 	return (line);
 }
-// #include <fcntl.h>
-// #include <stdio.h>
-
 // int	main()
 // {	
-// 	int fd = open("1char.txt", O_RDONLY);
+// 	int fd = open("read_error.txt", O_RDONLY);
 // 	char	*test = get_next_line(fd);
-// 	printf("%s\n", test);
+// 	char	*expect = "aaaaaaaaaa\n";
+// 	// 1
+// 	printf("result: \t%ld, %s", ft_strlen(test), test);
+// 	printf("expected: \t%ld, %s", ft_strlen(expect), expect);
+	
+// 	test = get_next_line(fd);
+// 	expect = "bbbbbbbbbb\n";
+// 	// 2
+// 	printf("result: \t%ld, %s", ft_strlen(test), test);
+// 	printf("expected: \t%ld, %s", ft_strlen(expect), expect);
+	
+// 	test = get_next_line(fd);
+// 	expect = "bbbbbbbbbb\n";
+// 	// 3
+// 	printf("result: \t%ld, %s", ft_strlen(test), test);
+// 	printf("expected: \t%ld, %s", ft_strlen(expect), expect);
+	
+// 	test = get_next_line(fd);
+// 	test = get_next_line(fd);
+// 	expect = NULL;
+// 	// 4
+// 	printf("result: \t%ld, %s\n", ft_strlen(test), test);
+// 	printf("expected: \t%ld, %s\n", ft_strlen(expect), expect);
+
+// 	close(fd);
+// 	fd = open("read_error.txt", O_RDONLY);
+// 	test = get_next_line(fd);
+// 	expect = "aaaaaaaaaa\n";
+// 	// 5
+// 	printf("result: \t%ld, %s", ft_strlen(test), test);
+// 	printf("expected: \t%ld, %s", ft_strlen(expect), expect);
+	
 // 	close(fd);
 // 	free(test);
 // 	return (0);
