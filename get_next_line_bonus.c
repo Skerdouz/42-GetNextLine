@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:25 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/06/04 10:56:47 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/06/04 12:51:35 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ static char	*fd_reader(int fd, char *stash)
 	int		bytesread;
 
 	bytesread = 1;
+	if (!stash)
+		stash = NULL;
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
@@ -85,20 +87,20 @@ static char	*fd_reader(int fd, char *stash)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*stash;
+	static char	*stash[1024];
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
+	if (fd < 0 || fd > 1023 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
 	{
-		if (stash)
-			free(stash);
-		stash = NULL;
+		if (stash[fd])
+			free(stash[fd]);
+		stash[fd] = NULL;
 		return (NULL);
 	}
 	line = NULL;
-	stash = fd_reader(fd, stash);
-	if (!stash)
+	stash[fd] = fd_reader(fd, stash[fd]);
+	if (!stash[fd])
 		return (NULL);
-	line = get_line(stash);
-	stash = get_restover(stash);
+	line = get_line(stash[fd]);
+	stash[fd] = get_restover(stash[fd]);
 	return (line);
 }
