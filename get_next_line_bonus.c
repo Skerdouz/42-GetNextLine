@@ -6,11 +6,11 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:25 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/06/04 12:51:35 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:26:53 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*get_restover(char *old)
 {
