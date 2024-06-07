@@ -6,11 +6,11 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 09:52:22 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/06/06 17:27:01 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/06/07 16:13:30 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
 size_t	ft_strlen(const char *s)
 {
